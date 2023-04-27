@@ -1,0 +1,149 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+public class POEExperimentOtherGroup {
+public static void main(String[] args) {
+dispatchLoop();
+}
+public static void menu() {
+System.out.println("1. Create a User Account");
+System.out.println("2. Login User");
+System.out.println("3. Display User Details");
+System.out.println("4. Quit");
+}
+public static String getAChoice (Scanner input) {
+return input.nextLine();
+}
+public static UserAccount createUserAccount (Scanner input) {
+System.out.println("Enter a first name");
+String fn = input.nextLine();
+System.out.println("Enter a last name");
+String ln = input.nextLine();
+System.out.println("Enter a username");
+String un = input.nextLine();
+System.out.println("Enter a password");
+String pd = input.nextLine();
+
+UserAccount aUser = new UserAccount(fn, ln, un, pd);
+return aUser;
+}
+public static void display(UserAccount u) {
+System.out.println(u.toString());
+}
+public static void dispatchLoop() {
+Scanner input = new Scanner(System.in);
+UserAccount user = null;
+Login controller = new Login ();
+while (true) {
+menu ();
+String choice = getAChoice(input);
+switch (choice) {
+case "1" :
+user = createUserAccount(input); 
+break;
+case "2" :
+controller.loginUser(user);
+break;
+case "3" :
+display(user);
+break;
+case "4" :
+System.exit(0);
+break;
+
+default:
+System.out.println("Invalid choice, please try again.");
+break;
+}
+}
+}
+}
+public class UserAccount {
+private String firstName;
+private String lastName;
+private String userName;
+private String password;
+public UserAccount(String fn, String ln, String un, String pd) {
+firstName = fn;
+lastName = ln;
+userName = un;
+password = pd;
+}
+}
+public String toString () {
+return "[" + getFirstName() + "," + getLastName() + "," + getUserName() +"," + 
+getPassword() + " ]";
+}
+public String getFirstName() {
+return firstName;
+}
+public void setFirstName(String firstName){
+this.firstName = firstName;
+
+}
+public String getLastName () {
+return lastName;
+}
+public void setLastName(String lastName){
+this.lastName = lastName;
+}
+public String getUserName () {
+return userName;
+}
+public void setUserName(String userName){
+this.userName = userName;
+}
+public String getPassword () {
+return password;
+}
+public void setPassword(String password) {
+this.password = password;
+}
+public class Login {
+private List < UserAccount > registeredUserAccounts = new ArrayList<>();
+private UserAccount currUserAccount = null;
+public boolean checkUserName(UserAccount u) {
+for (UserAccount registeredUserAccount : registeredUserAccounts){
+if (registeredUserAccount.getUserName().equals(u.getUserName())){
+
+return true;
+}
+}
+return false;
+}
+public boolean checkPasswordComplexity(UserAccount u) {
+String password = u.getPassword();
+if (password.length() < 8){
+return false;
+}
+return true;
+}
+public String registerUser(UserAccount u) {
+if (checkUserName(u)){
+return "Username is taken. Please choose another username.";
+}
+if (!checkPasswordComplexity(u)){
+return "Password complexity does not meet requirements.";
+}
+registeredUserAccounts.add(u);
+return "User registration complete.";
+}
+public boolean loginUser(String userName, String password) {
+for (UserAccount registeredUserAccount : registeredUserAccounts){
+if (registeredUserAccount.getUserName().equals(userName) && 
+registeredUserAccount.getPassword().equals(password)){
+currUserAccount = registeredUserAccount;
+return true;
+
+}
+}
+return false;
+}
+public String returnLoginStatus() {
+if (currUserAccount != null){
+return "User" + currUserAccount.getUserName() + "logged in.";
+} else {
+return "No user logged in.";
+}
+}
+}
